@@ -38,6 +38,14 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+// Seed the database
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate(); // Ensure database is created and migrated
+    dbContext.SeedData(); // Call your SeedData method here
+}
+
 // Define the HTML route online
 app.MapGet("/", () => Results.Content(@"
     <!DOCTYPE html>
