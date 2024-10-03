@@ -20,5 +20,21 @@ namespace TechStore.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<User> Users { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ProductOrder>()
+                .HasKey(po => new { po.ProductId, po.OrderId });
+
+            modelBuilder.Entity<ProductOrder>()
+                .HasOne(po => po.Product)
+                .WithMany()
+                .HasForeignKey(po => po.ProductId);
+
+            modelBuilder.Entity<ProductOrder>()
+                .HasOne(po => po.Order)
+                .WithMany(o => o.Products)
+                .HasForeignKey(po => po.OrderId);
+        }
+
     }
 }
